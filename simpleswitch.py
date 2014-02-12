@@ -16,8 +16,7 @@ class _case:
         if self.switch.is_exhausted:
             return
 
-        if self.switch.auto_assert:
-            assrt = assrt == self.switch.value
+        assrt = self.switch.asserter(assrt)
 
         if assrt or self.switch.pass_through:
             self.switch.pass_through = pass_through
@@ -37,13 +36,21 @@ class _case:
 
 
 class switch:
-    def __init__(self, value, simple=False, args=None, kwargs=None):
+    def __init__(self, value, asserter=None, args=None, kwargs=None):
         self.value = value
         self.is_exhausted = False
         self.pass_through = False
-        self.auto_assert = simple
         self.callback_args = args or []
         self.callback_kwargs = kwargs or {}
+
+        if asserter is None:
+            self.asserter = bool
+        elif hasattr(asserter, '__call__'):
+            self.asserter = asserter
+        elif asserter == True:
+            self.asserter = lambda val: val == value
+        else:
+            raise TypeError('Can\'t use given asserter: %r' % (asserter, ))
 
     def __enter__(self, *a, **b):
         return _case(self)
