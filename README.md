@@ -47,3 +47,24 @@ Usage
     with switch(a, kwargs={'arg1': 'q'}) as case:
         case(a == 1, callback1)
         case(a == 2, callback6, False, arg2 = 'w')
+
+    with switch(a, bool) as case:
+        case(1, callback1, pass_through=True)
+        case(2, callback2, pass_through=True)
+        case(3, callback3, pass_through=False)
+        case(4, callback4)
+        case.default(callback_default)
+
+    with switch(a, lambda v: not (v % 2)) as case:
+        case(1, callback1, pass_through=True)
+        case(2, callback2, pass_through=True)
+        case(3, callback3, pass_through=False)
+        case(4, callback4)
+        case.default(callback_default)
+
+    with switch(None, 'asd'.__eq__) as case:
+        case('ASD', callback1, pass_through=True)
+        case('asd', callback2, pass_through=True)
+        case('qwe', callback3, pass_through=False)
+        case(4, callback4)
+        case.default(callback_default)
