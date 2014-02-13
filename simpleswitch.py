@@ -33,6 +33,9 @@ class _case:
             action.
         """
 
+        if self.switch.is_finished:
+            raise Exception('Using case aside of context manager it was definied is denied')
+
         if self.switch.is_exhausted:
             return
 
@@ -72,6 +75,7 @@ class switch:
         self.pass_through = False
         self.callback_args = args or []
         self.callback_kwargs = kwargs or {}
+        self.is_finished = False
 
         if asserter is None:
             self.asserter = bool
@@ -91,5 +95,6 @@ class switch:
     def __exit__(self, *a, **b):
         """ Mark switch as finished when exits from context manager.
         """
-        pass
+        self.is_exhausted = True
+        self.is_finished = True
 
