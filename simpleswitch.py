@@ -52,7 +52,7 @@ class _case:
             if callback:
                 callback(self.switch.value, *self._get_args(args), **self._get_kwargs(kwargs))
 
-    def default(self, callback):
+    def default(self, callback=None):
         """ `default` statement in `switch` clause.
         """
         if self.switch.is_exhausted:
