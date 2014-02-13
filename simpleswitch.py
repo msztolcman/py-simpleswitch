@@ -10,18 +10,26 @@ class _case:
 
     def __init__(self, switch):
         """ Initialize object
+            Arguments:
+            switch -- instance of `switch` from context manager
         """
         self.switch = switch
 
     def _get_args(self, args):
         """ Build positional arguments for callback, using common
             (defined in `switch`) and local (passed to `case`) arguments.
+
+            Arguments:
+            args -- iterable with arguments for callback
         """
         return list(self.switch.callback_args) + list(args)
 
     def _get_kwargs(self, kwargs):
         """ Build keyword arguments for callback, using common
             (defined in `switch`) and local (passed to `case`) arguments.
+
+            Arguments:
+            kwargs -- dictionary with arguments for callback
         """
         ret = self.switch.callback_kwargs.copy()
         ret.update(kwargs)
@@ -31,6 +39,14 @@ class _case:
         """ Test `case` condition and if it's evaluated to true (or was evaluated
             in previous statement, and is enabled `pass_through`), call defined
             action.
+
+            Arguments:
+            assrt -- value passed to asserter (`switch`.`asserter`)
+            callback -- callback to execute if asserter returns True
+            pass_through -- do we have to continue to next `case` even if current
+                call exhausts switch
+            *args - additional args to pass to callback
+            **kwargs - additional args to pass to callback
         """
 
         if self.switch.is_finished:
@@ -54,6 +70,9 @@ class _case:
 
     def default(self, callback=None):
         """ `default` statement in `switch` clause.
+
+            Arguments:
+            callback -- callback to call in `default` block
         """
         if self.switch.is_exhausted:
             return
@@ -69,6 +88,12 @@ class switch:
     def __init__(self, value, asserter=None, args=None, kwargs=None):
         """ Initializes data, and determine asserter in case when `asserter` is not
             callable.
+
+            Arguments:
+            value -- value passed to asserter in `case` calls, also passed to callback from `case` block
+            asserter -- True: asserter will compare `value` with `assrt` (from `_case`)
+            args - list of arguments passed to every callback from `case` block
+            kwargs - dictionary of named arguments passed to every callback from `case` block
         """
         self.value = value
         self.is_exhausted = False
