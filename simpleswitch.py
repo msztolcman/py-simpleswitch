@@ -1,5 +1,7 @@
 __all__ = ['switch']
 
+__version__ = '0.1'
+
 class _case:
     def __init__(self, switch):
         self.switch = switch
